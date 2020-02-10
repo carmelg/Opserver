@@ -32,11 +32,11 @@ namespace StackExchange.Opserver.Controllers
         public ActionResult Servers(string cluster, string node, string ag, bool detailOnly = false)
         {
             var vd = new ServersModel
-                {
-                    StandaloneInstances = SQLModule.StandaloneInstances,
-                    Clusters = SQLModule.Clusters,
-                    Refresh = node.HasValue() ? 10 : 5
-                };
+            {
+                StandaloneInstances = SQLModule.StandaloneInstances,
+                Clusters = SQLModule.Clusters,
+                Refresh = node.HasValue() ? 10 : 5
+            };
 
             if (cluster.HasValue())
                 vd.CurrentCluster = vd.Clusters.Find(c => string.Equals(c.Name, cluster, StringComparison.OrdinalIgnoreCase));
@@ -218,7 +218,7 @@ namespace StackExchange.Opserver.Controllers
             {
                 View = SQLViews.Databases,
                 CurrentInstance = i,
-                Refresh = 2*60
+                Refresh = 2 * 60
             };
             return View(vd);
         }
@@ -283,6 +283,33 @@ namespace StackExchange.Opserver.Controllers
             if (Current.IsAjaxRequest)
                 return ContentNotFound("Instance " + node + " was not found.");
             return View("Instance.Selector", new DashboardModel());
+        }
+
+        // Carmelo
+        [Route("sql/active/kill"), AlsoAllow(Roles.SQLAdmin)]
+        public ActionResult Kill(string node, string database, int sid)
+        {
+            var activeSearchOptions = new SQLInstance.ActiveSearchOptions();
+
+            var i = SQLInstance.Get(node);
+            var activeOps = i.GetActiveOperations(activeSearchOptions);
+            var model = activeOps.Data.FirstOrDefault(x => x.SessionId == sid);
+
+            ViewData["node"] = node;
+            ViewData["sid"] = sid;
+
+            return View("Operations.Active.Kill", model);
+        }
+
+        // Carmelo
+        [Route("sql/active/killing"), AlsoAllow(Roles.SQLAdmin)]
+        public async Task<ActionResult> KillQueryAsync(string node, int sid)
+        {
+            var i = SQLInstance.Get(node);
+            await i.KillAsync(sid);
+
+            Response.Redirect("?node=" + node);
+            return null;
         }
     }
 }

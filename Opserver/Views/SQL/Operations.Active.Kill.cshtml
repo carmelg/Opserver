@@ -1,0 +1,61 @@
+﻿@using StackExchange.Opserver.Controllers
+@using StackExchange.Opserver.Data.SQL
+@using StackExchange.Opserver.Views.SQL
+@model SQLInstance.ActiveOperation
+
+
+<h4 class="modal-title">
+    Kill
+</h4>
+
+<table class="table table-striped table-hover table-super-condensed table-responsive">
+<tr>
+    <td>
+        @if (Model != null && Model.TempDBCurrent > 0)
+        {
+            <div>
+                <span class="text-muted">Temp (Pages):</span> @Model.TempDBCurrent.ToComma()
+            </div>
+        }
+        @if (Model != null && Model.TempDBAllocations > 0)
+        {
+            <div>
+                <span class="text-muted">Temp (Writes):</span> @Model.TempDBAllocations.ToComma()
+            </div>
+        }
+        @if (Model != null && Model.WaitInfo.HasValue())
+        {
+            <div>
+                <span class="text-muted">Waits:</span> @Model.WaitInfo
+            </div>
+        }
+        @if (Model != null && Model.BlockingSessionId.HasValue)
+        {
+            <div>
+                <a href="#spid-@Model.BlockingSessionId.ToString()"><span class="text-muted">Blocked By:</span> @Model.BlockingSessionId</a>
+            </div>
+        }
+        @if (Model != null && Model.SqlText.HasValue())
+        {
+            <pre id="sql"><code class="sql">@Model.SqlText</code></pre>
+        }
+        @if (Model != null && Model.PercentComplete.HasValue && Model.TimeLeft.HasValue)
+        {
+            <div class="progress progress-embed progress-limited" title="ETA: @((Model.StartTime + Model.TotalTime).Value.ToZuluTime())">
+                <div class="progress-bar" style="width: @Model.PercentComplete.Value.ToString(CultureInfo.InvariantCulture)%;"></div>
+                <span>Progress: @Model.PercentComplete.Value.ToString("##0.##")% (ETA: @(Model.TimeLeft.Value.ToReadableString()))</span>
+            </div>
+        }
+    </td>
+</tr>
+</table>
+
+<form class="form-horizontal" action="@Url.Action(nameof(SQLController.KillQueryAsync))" method="POST">
+<input type="hidden" name="node" value="@ViewData["node"]" />
+<input type="hidden" name="sid" value="@ViewData["sid"]" />
+
+<div class="form-group form-group-sm" style="text-align:right;">
+    <button class="btn btn-sm btn-primary" data-action="kill">Kill</button>
+    <button class="btn btn-sm btn-secondary" data-dismiss="modal">Annulla</button>
+</div>
+</form>

@@ -3,6 +3,8 @@
 @using StackExchange.Opserver.Data.Dashboard
 @using StackExchange.Opserver.Data.SQL
 @using StackExchange.Opserver.Views.SQL
+@using Roles = StackExchange.Opserver.Models.Roles
+
 @model OperationsActiveModel
 @{
     var i = Model.CurrentInstance;
@@ -145,6 +147,14 @@ else
                         {
                             <pre class="pre-limited"><code class="sql">@w.SqlText</code></pre>
                         }
+                        
+                        @if (Current.IsInRole(Roles.SQLAdmin))
+                        {
+                            <div>
+                                <a href="#/sql/db/kill/@w.DatabaseName/@w.SessionId">Kill (@w.SessionId)</a>   
+                            </div>
+                        }
+
                         @if (w.PercentComplete.HasValue && w.TimeLeft.HasValue)
                         {
                             <div class="progress progress-embed progress-limited" title="ETA: @((w.StartTime + w.TotalTime).Value.ToZuluTime())">
@@ -168,3 +178,17 @@ else
         </table>
     }
 }
+
+<script>
+    function kill(databaseName, sessionId) {
+        // @i.Name
+
+        alert(databaseName);
+        var result = confirm("Vuoi killare il processo " + sessionId + " ?");
+        if (result == true) {
+            alert ("Killato");
+        } else {
+            alert ("No Kill");
+        }
+    }
+</script>

@@ -799,6 +799,16 @@ Status.SQL = (function () {
             '#/sql/active/filters': function () {
                 Status.popup('sql/active/filters' + window.location.search, null, filterOptions);
             },
+            // Carmelo
+            '#/sql/db/kill': function (val) {
+                Status.popup('sql/active/kill', { node: Status.SQL.options.node, database: val.split('/')[1], sid: parseInt(val.split('/')[2]) }, {
+                    onLoad: function () {
+                        $('#sql').each(function (i, block) {
+                            hljs.highlightBlock(block);
+                        });
+                    }
+                });
+            },
             '#/db/': function (val, firstLoad, prev) {
                 var obj = val.indexOf('tables/') > 0 || val.indexOf('views/') || val.indexOf('storedprocedures/') || val.indexOf('unusedindexes/') > 0
                           ? val.split('/').pop() : null;

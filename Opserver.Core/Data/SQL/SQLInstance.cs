@@ -193,5 +193,14 @@ namespace StackExchange.Opserver.Data.SQL
             }, duration, staleDuration);
 
         public override string ToString() => Name;
+
+        // Carmelo
+        public async Task KillAsync(int sid)
+        {
+            using (var conn = GetConnection())
+            {
+                await conn.ExecuteAsync(string.Format("Kill {0}", sid));
+            }
+        }
     }
 }
