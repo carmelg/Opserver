@@ -230,6 +230,10 @@ namespace StackExchange.Opserver.Data.Dashboard
         // Interfaces, Volumes, Applications, and Services are set by the provider
         public List<Interface> Interfaces { get; internal set; }
         public List<Volume> Volumes { get; internal set; }
+
+        // Carmelo
+        public List<Request> Requests{ get; internal set; }
+
         public List<Application> Apps { get; internal set; }
         public List<NodeService> Services { get; internal set; }
 

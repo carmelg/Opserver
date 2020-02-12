@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
+using System.IO;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -67,7 +69,7 @@ namespace StackExchange.Opserver.Data.Dashboard.Providers
 
                 try
                 {
-                    var tasks = new[] { PollCpuUtilizationAsync(), PollMemoryUtilizationAsync(), PollNetworkUtilizationAsync(), PollVolumePerformanceUtilizationAsync() };
+                    var tasks = new[] { PollCpuUtilizationAsync(), PollMemoryUtilizationAsync(), PollNetworkUtilizationAsync(), PollVolumePerformanceUtilizationAsync(), GetRequestApplicationPoolAsync() };
                     await Task.WhenAll(tasks).ConfigureAwait(false);
                     ClearSummaries();
                 }
@@ -277,6 +279,60 @@ SELECT InterfaceIndex, IPAddress, IPSubnet, DHCPEnabled
                         }
                     }
                 }
+            }
+
+            // Carmelo
+            private async Task GetRequestApplicationPoolAsync()
+            {
+                try
+                {
+                    if (Category.Name == "Web Servers Recuper@")
+                    {
+                        Requests.Clear();
+
+                        var proc = new Process
+                        {
+                            StartInfo = new ProcessStartInfo
+                            {
+                                FileName = Path.Combine(Current.Settings.Path, "..", @"Request\RequestAppPool.exe"),
+                                Arguments = string.Format("-i {0} -p Recupera -t 1000", Ip),
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                CreateNoWindow = true
+                            }
+                        };
+
+                        proc.Start();
+
+                        proc.WaitForExit();
+
+                        while (!proc.StandardOutput.EndOfStream)
+                        {
+                            string line = proc.StandardOutput.ReadLine();
+
+                            if (proc.ExitCode == 0)
+                            {
+                                var request = line.Split('\t');
+
+                                Requests.Add(new Request()
+                                {
+                                    Server = PrettyName,
+                                    ClientIp = request[0],
+                                    TimeElapsed = Convert.ToInt32(request[1]),
+                                    Url = request[2]
+                                });
+                            } else
+                            {
+                                new ArgumentException(line);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Current.LogException(ex);
+                }
+
             }
 
             private async Task GetAllVolumesAsync()

@@ -71,6 +71,7 @@
     <Compile Include="Controllers\DashboardController.Admin.cs">
       <DependentUpon>DashboardController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\WebServerController.cs" />
     <Compile Include="Helpers\Icon.cs" />
     <Compile Include="Helpers\MiniProfilerCacheStorage.cs" />
     <Compile Include="Helpers\TestItem.cs" />
@@ -651,9 +652,11 @@
     </Content>
     <Content Include="Views\Redis\Server.Actions.cshtml" />
     <Content Include="Views\Redis\Server.Actions.Preview.cshtml" />
-    <Content Include="Views\SQL\Operations.Active.Kill.cshtml" >
-        <DependentUpon>Operations.Active.cshtml</DependentUpon>
+    <Content Include="Views\SQL\Operations.Active.Kill.cshtml">
+      <DependentUpon>Operations.Active.cshtml</DependentUpon>
     </Content>
+    <Content Include="Views\WebServer\Dashboard.Table.cshtml" />
+    <Content Include="Views\WebServer\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\js\Scripts.js" />

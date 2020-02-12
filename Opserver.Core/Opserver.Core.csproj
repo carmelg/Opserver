@@ -27,6 +27,11 @@
     <PackageReference Include="System.Runtime.Caching" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Web.Administration">
+      <HintPath>libs\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Update="Data\CloudFlare\CloudFlareAPI.*.cs" DependentUpon="CloudFlareAPI.cs" />
     <Compile Update="Data\Dashboard\Interface.*.cs" DependentUpon="Interface.cs" />
     <Compile Update="Data\Dashboard\Node.*.cs" DependentUpon="Node.cs" />
@@ -43,5 +48,10 @@
     <Compile Update="Settings\HAProxySettings.*.cs" DependentUpon="HAProxySettings.cs" />
     <Compile Update="Current.*.cs" DependentUpon="Current.cs" />
     <Compile Update="ExtensionMethods.*.cs" DependentUpon="ExtensionMethods.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Data\Dashboard\Volume - Copy.Data.cs">
+      <DependentUpon>Volume.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

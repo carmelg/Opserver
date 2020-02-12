@@ -58,6 +58,7 @@ namespace StackExchange.Opserver.Data.Dashboard.Providers
                 Services = new List<NodeService>();
                 VMs = new List<Node>();
                 Apps = new List<Application>();
+                Requests = new List<Request>();
 
                 // TODO: Size for retention / interval and convert to limited list
                 MemoryHistory = new List<MemoryUtilization>(1024);

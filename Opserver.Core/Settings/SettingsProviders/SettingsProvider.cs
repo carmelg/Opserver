@@ -26,6 +26,8 @@ namespace StackExchange.Opserver.SettingsProviders
         public SQLSettings SQL => GetSettings<SQLSettings>();
         public JiraSettings Jira => GetSettings<JiraSettings>();
 
+        public DashboardSettings WebServer => GetSettings<DashboardSettings>();
+
         public abstract T GetSettings<T>() where T : ModuleSettings, new();
         public abstract T SaveSettings<T>(T settings) where T : class, new();
 
