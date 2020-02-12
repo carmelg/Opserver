@@ -284,6 +284,9 @@ SELECT InterfaceIndex, IPAddress, IPSubnet, DHCPEnabled
             // Carmelo
             private async Task GetRequestApplicationPoolAsync()
             {
+                var appPool = Current.Settings.WebServer.AppPool;
+                var timeElaped = Current.Settings.WebServer.TimeElapsed;
+
                 try
                 {
                     if (Category.Name == "Web Servers Recuper@")
@@ -295,7 +298,7 @@ SELECT InterfaceIndex, IPAddress, IPSubnet, DHCPEnabled
                             StartInfo = new ProcessStartInfo
                             {
                                 FileName = Path.Combine(Current.Settings.Path, "..", @"Request\RequestAppPool.exe"),
-                                Arguments = string.Format("-i {0} -p Recupera -t 1000", Ip),
+                                Arguments = $"-i {Ip} -p {appPool} -t {timeElaped}",
                                 UseShellExecute = false,
                                 RedirectStandardOutput = true,
                                 CreateNoWindow = true

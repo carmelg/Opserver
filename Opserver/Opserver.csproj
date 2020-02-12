@@ -312,6 +312,7 @@
     <Content Include="Content\font-awesome\less\stacked.less" />
     <Content Include="Content\font-awesome\less\variables.less" />
     <Content Include="Content\themes\_shared\highlightjs.less" />
+    <Content Include="Config\WebServerSettings.json" />
     <None Include="Help\SQL\WaitStats.md" />
     <Content Include="Views\CloudFlare\Dashboard.cshtml" />
     <Content Include="Views\Dashboard\Node.Graph.cshtml">
